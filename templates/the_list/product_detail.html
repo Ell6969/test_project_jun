@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="modal fade" id="productDetailModal{{ product.id }}" tabindex="-1"
+     aria-labelledby="productDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailModalLabel">{{ product.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-6 border-end d-flex flex-column">
+            <p>{{ product.description }}</p>
+            <p>Цена: {{ product.price }} RUB</p>
+
+            <div class="mt-auto">
+              <p><small>Создан: {{ product.created|date:"d m Y H:i:s" }}</small></p>
+              <p><small>Обновлен: {{ product.updated|date:"d m Y H:i:s" }}</small></p>
+            </div>
+          </div>
+
+          <div class="col-md-6 text-center">
+            {% if product.image %}
+            <img src="{{ product.image.url }}"
+                 alt="Картинка" class="img-thumbnail"
+                 style="max-width: 400px;">
+            {% else %}
+            <img src="{% static 'image/one.jpg' %}"
+                 alt="Картинка" class="img-thumbnail"
+                 style="max-width: 400px;">
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>

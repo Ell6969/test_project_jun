@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+<div class="row">
+  <div class="row">
+    <div class="col-md-6">
+      <h5>
+        История покупок:
+      </h5>
+    </div>
+    <div class="col-md-6">
+      <h5>
+        <a class=" mx-auto" href="#"
+           data-bs-toggle="modal" data-bs-target="#modalHistoryClean">
+          Очистить историю полностью
+        </a>
+      </h5>
+
+      <!-- Modal -->
+      <div class="modal fade" id="modalHistoryClean" tabindex="-1" aria-labelledby="modalHistoryClean" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Подтвердите удаление истории</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-footer">
+              <a class="btn btn-primary me-auto" href="{% url 'product:product_history_clean' %}"
+               role="button">Да, удалить</a>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+<!--      end modal-->
+    </div>
+  </div>
+
+  {% if not products %}
+  <h2>Список пуст</h2>
+  {% endif %}
+
+  {% for product in products %}
+  <!--      1 элемент покупки-->
+  <div class="row border border-primary rounded">
+
+    <!--          продукт-->
+    <div class="col-md-6">
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action"
+           aria-current="true" data-bs-toggle="modal" data-bs-target="#productDetailModal{{ product.id }}">
+          <div class="d-flex w-100 justify-content-between">
+
+            <h5 class="mb-1">{% filter truncatechars_html:20 %}{{ product.name }}{% endfilter %}</h5>
+            <small>Цена: {{ product.price }}</small>
+          </div>
+          <p class="mb-1">{{ product.description|truncatechars:54 }}</p>
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col">
+          <small>Создан: {{ product.created|date:"d m Y H:i:s" }}</small>
+          <p>
+            <small>Куплен: {{ product.buy_date|date:"d m Y H:i:s" }}</small>
+          </p>
+
+        </div>
+        <div class="col d-flex align-items-center">
+          <a class="btn btn-danger mx-auto" href="{% url 'the_list:product_remove' product.slug %}"
+             role="button">Удалить из истории</a>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!--          модальное окно detail-->
+    {% include 'the_list/product_detail.html' %}
+    <!--          конец модального окна detail-->
+
+  </div>
+  <!--        конец элемента покупки-->
+  {% endfor %}
+</div>
+
+{% endblock%}
+

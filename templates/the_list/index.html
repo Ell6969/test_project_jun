@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="row">
+  {% if not products %}
+  <h1>Список пуст</h1>
+  {% endif %}
+
+  {% for product in products %}
+  <!--      1 элемент покупки-->
+  <div class="row border border-primary rounded">
+
+    <!--            отправить в купленое-->
+    <div class="col-md-1 d-flex align-items-center">
+      <a class="btn btn-primary" href="{% url 'the_list:product_change_status' product.slug %}"
+         role="button">Купил</a>
+    </div>
+    <!--          продукт-->
+    <div class="col-md-6">
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action"
+           aria-current="true" data-bs-toggle="modal" data-bs-target="#productDetailModal{{ product.id }}">
+          <div class="d-flex w-100 justify-content-between">
+
+            <h5 class="mb-1">{% filter truncatechars_html:15 %}{{ product.name }}{% endfilter %}</h5>
+            <small>Цена: {{ product.price }}</small>
+            <small>{{ product.created|date:"d m Y" }}</small>
+          </div>
+          <p class="mb-1">{{ product.description|truncatechars:54 }}</p>
+        </a>
+      </div>
+    </div>
+
+    <!--          модальное окно detail-->
+    {% include 'the_list/product_detail.html' %}
+    <!--          конец модального окна detail-->
+
+
+    <!--          3 кнопки-->
+    <div class="col-md-5 d-flex align-items-center">
+
+      <a class="btn btn-danger mx-auto" href="{% url 'the_list:product_remove' product.slug %}"
+         role="button">Удалить</a>
+
+
+      <a class="btn btn-success mx-auto" href="#" role="button"
+        data-bs-toggle="modal" data-bs-target="#productChange{{ product.id }}">
+        Изменить</a>
+      {% include 'the_list/product_change.html' %}
+
+<!--      картинка-->
+      <a class="btn btn-warning mx-auto" href="#" role="button"
+         data-bs-toggle="modal" data-bs-target="#imageModal{{ product.id }}">Изображение</a>
+
+      <div class="modal fade" id="imageModal{{ product.id }}" tabindex="-1" aria-labelledby="imageModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="imageModalLabel">Изображение</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="Изображение" class="img-fluid max-screen-image">
+              {% else %}
+                <img src="{% static 'image/one.jpg' %}" alt="Изображение" class="img-fluid max-screen-image">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+<!--      конец картинки-->
+
+    </div>
+
+  </div>
+  <!--        конец элемента покупки-->
+  {% endfor %}
+</div>
+
+{% endblock %}

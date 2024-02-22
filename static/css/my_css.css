@@ -1,0 +1,52 @@
+
+/* тень */
+.custom-shadow {
+    box-shadow: 5px 5px 25px 19px #000000;
+}
+/* при наведении */
+.hov:hover {
+    color: #1684e3 !important;
+}
+/* всплывающие оповещения */
+body .messages {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  z-index: 1000;
+}
+
+.alert.alert-danger.form-eror {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  z-index: 1000;
+}
+
+body .alert {
+  margin-bottom: 0;
+}
+
+/* картинка на кнопку изображение */
+.max-screen-image {
+    max-width: 100% !important;
+    max-height: 100vh !important;
+}
+.mt-100 {
+    margin-top: 100% !important;
+  }
+
+/* ради футера */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+footer {
+    margin-top: auto;
+}
