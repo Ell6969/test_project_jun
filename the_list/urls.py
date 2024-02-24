@@ -7,8 +7,8 @@ app_name = "the_list"
 
 urlpatterns = [
     path('', index, name='list_products'),
-    path('product_history/<str:history>', index, name='product_history'),
-    path('product_history/clean_history/', clean_user_products_full, name='product_history_clean'),
+    path('history/clean_history/', clean_user_products_full, name='product_history_clean'),
+    path('search/', index, name='search'),
 
     path('product-add/', product_add, name='product_add'),
     path('product_change/<slug:product_slug>/', product_change, name='product_change'),

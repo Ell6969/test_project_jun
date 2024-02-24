@@ -6,10 +6,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from the_list.forms import ProductsForm
 from the_list.models import Products
-from the_list.utils import get_user_index_products, get_history_products
+from the_list.utils import get_user_index_products, get_history_products, q_search, filter_products
 
 
-def index(request, history=False):
+def index(request):
+    query = request.GET.get('q', None)
+    history = request.GET.get('history', None)
+    filter = request.GET.get('filter', None)
+
     if history:
         products = get_history_products(request).order_by('-buy_date')
     else:
@@ -17,9 +21,18 @@ def index(request, history=False):
 
     last_products = products[:3]
 
+    if query:
+        products = q_search(query, products)
+
+    if filter:
+        products = filter_products(request, products)
+
     order_by_list = request.GET.getlist('order_by')
-    if order_by_list:
-        products = products.order_by(*order_by_list)
+    valid_fields = [field.name for field in Products._meta.get_fields()]
+    valid_order_by_list = [field for field in order_by_list if field in valid_fields]
+    if valid_order_by_list:
+        products = products.order_by(*valid_order_by_list)
+
 
     paginator = Paginator(products, 8)
     page_number = request.GET.get('page', 1)
@@ -30,16 +43,16 @@ def index(request, history=False):
     except EmptyPage:
         current_page = paginator.page(paginator.num_pages)
 
-    total_price_by_status = Products.objects.values('status').annotate(
-        total_price=Sum('price')
-    )
+    total_price_waiting = Products.waitobj.all().aggregate(Sum('price'))['price__sum']
+    total_price_purch = Products.objects.filter(status=Products.Status.PURCHASED).aggregate(Sum('price'))['price__sum']
     context = {
         'products': current_page,
         'last_products': last_products,
         'all_wait_product': get_user_index_products(request).count(),
         'count_history_products': get_history_products(request).count(),
-        'total_price_waiting': total_price_by_status.get(status=Products.Status.WAIT)['total_price'],
-        'total_price_purch': total_price_by_status.get(status=Products.Status.PURCHASED)['total_price'],
+        'total_price_waiting': total_price_waiting if total_price_waiting else 0,
+        'total_price_purch': total_price_purch if total_price_purch else 0,
+        'history': history,
     }
     if history:
         return render(request, 'the_list/list_history.html', context)

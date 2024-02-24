@@ -7,14 +7,24 @@
 - Редактирование продукта
 - Удаление продукта
 - Сортировка
+- Фильтрация
 - Использовать django + PostgreSQL
 - Верстка и JS(Ajax) будет плюсом.
 
 ---
+**Запуск**
+
+```commandline
+py manage.py runserver
+```
 **Добавить покупок 999**
 
 ```commandline
 py manage.py add_products
+```
+**Чит на смену ключа сессии для всего списка**
+```commandline
+py manage.py change_session_key
 ```
 
 ---

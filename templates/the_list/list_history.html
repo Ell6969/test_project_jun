@@ -40,8 +40,12 @@
     </div>
   </div>
 
+  {% if request.GET.q %}
+    <h4>Результаты поиска</h4>
+  {% endif %}
+
   {% if not products %}
-  <h2>Список пуст</h2>
+    <h1>Тут пусто</h1>
   {% endif %}
 
   {% for product in products %}
@@ -55,10 +59,13 @@
            aria-current="true" data-bs-toggle="modal" data-bs-target="#productDetailModal{{ product.id }}">
           <div class="d-flex w-100 justify-content-between">
 
-            <h5 class="mb-1">{% filter truncatechars_html:20 %}{{ product.name }}{% endfilter %}</h5>
+            <h5 class="mb-1">
+              {% filter truncatechars_html:15 %}{% autoescape off %}{% if product.headline %}{{ product.headline }}{% else %}{{ product.name }}{% endif %}{% endautoescape %}{% endfilter %}</h5>
             <small>Цена: {{ product.price }}</small>
           </div>
-          <p class="mb-1">{{ product.description|truncatechars:54 }}</p>
+          <p class="mb-1">
+            {% autoescape off %}{% if product.bodyline %}{{ product.bodyline|truncatechars_html:54 }}{% else %}{{ product.description|truncatechars_html:54 }}{% endif %}{% endautoescape %}
+          </p>
         </a>
       </div>
     </div>

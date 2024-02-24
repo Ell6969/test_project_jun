@@ -29,7 +29,7 @@
           <li class="nav-item">
             <a class="nav-link hov text-white"
                aria-current="page"
-               href="{% url 'product:product_history' 'History' %}">
+               href="{% url 'product:list_products' %}?history=True">
               Полная история</a>
           </li>
 
@@ -41,6 +41,9 @@
             </a>
             <!--            форм сорт-->
             <form action="" method="get" class="dropdown-menu custom-shadow rounded">
+              {% if history %}
+                <input type="hidden" name="history" value="True">
+              {% endif %}
               <p class="mx-1 mt-1">Сортировать по:</p>
 
               <hr class="dropdown-divider mx-3">
@@ -48,6 +51,7 @@
               <div class="form-check p-1">
                 <p class="mx-1 mt-1">Цене:</p>
                 <select class="form-select" name="order_by">
+                  <option value="empty_field"> --------- </option>
                   <option value="price">Цена (по возрастанию)</option>
                   <option value="-price">Цена (по убыванию)</option>
                 </select>
@@ -56,6 +60,7 @@
               <div class="form-check p-1">
                 <p class="mx-1 mt-1">Дате:</p>
                 <select class="form-select" name="order_by">
+                  <option value="empty_field"> --------- </option>
                   <option value="created">Дате (по возрастанию)</option>
                   <option value="-created">Дате (по убыванию)</option>
                 </select>
@@ -67,7 +72,61 @@
             <!--            конец формы сорт-->
           </li>
           <!--          конец сортировки-->
+
+          <!--          Фильтры-->
+          <li class="nav-item dropdown">
+            <a class="nav-link hov dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+              Фильтры
+            </a>
+            <!--            форм фильтр-->
+            <form action="" method="get" class="dropdown-menu custom-shadow rounded p-1">
+              {% if history %}
+                <input type="hidden" name="history" value="True">
+                <input type="hidden" name="filter" value="True">
+              {% else %}
+                <input type="hidden" name="filter" value="True">
+              {% endif %}
+              <p class="mx-1 mt-1">Фильтровать по:</p>
+
+              <hr class="dropdown-divider mx-3">
+
+              <div class="mb-3">
+                <label for="min_price" class="form-label">Мин цена:</label>
+                <input type="number" class="form-control" id="min_price" name="min_price">
+              </div>
+
+              <div class="mb-3">
+                <label for="max_price" class="form-label">Макс цена:</label>
+                <input type="number" class="form-control" id="max_price" name="max_price">
+              </div>
+
+              <div class="mb-3">
+                <label for="start_date" class="form-label">Начальная дата:</label>
+                <input type="date" class="form-control" id="start_date" name="start_date">
+              </div>
+
+              <div class="mb-3">
+                <label for="end_date" class="form-label">Конечная дата:</label>
+                <input type="date" class="form-control" id="end_date" name="end_date">
+              </div>
+
+              <button type="submit" class="btn btn-primary mx-3 mt-3">Применить</button>
+
+            </form>
+            <!--            конец формы фильтр-->
+          </li>
+          <!--          конец фильтры-->
         </ul>
+
+<!--        кнопка поиска-->
+        <form class="d-flex mx-auto" role="search" action="{% url 'product:search' %}" method="get">
+          {% if history %}
+            <input type="hidden" name="history" value="True">
+          {% endif %}
+          <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
 
       </div>
 
